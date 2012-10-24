@@ -1,0 +1,89 @@
+html,body {
+    width: 100%;
+    height: 100%;
+}
+
+* html{
+    background-image:url(about:blank);
+    background-attachment:fixed;
+}
+
+.oye_ui {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    _position: absolute;
+    _top: expression(~'document.documentElement.scrollTop + document.documentElement.offsetHeight - this.offsetHeight  + "px"');
+    z-index: 9999999999;
+    .oye_cover {
+        display:none;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        opacity: .7;
+        filter: alpha(opacity=70);
+        z-index: 0;
+    }
+    .oye_content {
+        display:none;
+        zoom:1;
+        width: 80%;
+        overflow: hidden;
+        background: #fff;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+    }
+    .oye_controler {
+        width: 960px;
+        text-align: right;
+        margin: 0 auto;
+        background: skyblue;
+    }
+    #oye_fetch {
+        display:none;
+    }
+}
+
+.canFetched {
+    #oye_fetch {
+        display: inline-block;
+    }
+}
+
+.st_popUp {
+    height: 100%;
+    .oye_cover,.oye_content {
+        display: block;
+    }
+    .oye_controler {
+        display: none;
+    }
+}
+
+.img {
+    float: left;
+    width: 200px;
+    height: 200px;
+    img {
+        max-width: 100%;
+    }
+}
+
+.screenShot {
+    * {
+        display: block;
+        height: 300px;
+    }
+    img {
+        border:1px solid red;
+    }
+    span {
+        border:1px solid blue;
+        filter:~"progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+    }
+}
