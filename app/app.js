@@ -259,7 +259,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         return o.screenShotCallback(["http://pic.cnhan.com/uploadfile/2012/0905/20120905040655740.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700746.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700342.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040831340.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832569.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832588.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040833724.jpg"]);
       }
     }).on("click", ".oye_inPic", function() {
-      if (o.cartData.current.pic) {
+      if (!o.cartData.current.pic.length) {
         return;
       }
       ui.trigger("hide");

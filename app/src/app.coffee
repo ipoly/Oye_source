@@ -90,7 +90,7 @@ $ ->
     )
     # 打开截图浏览
     .on("click",".oye_inPic",->
-        return if o.cartData.current.pic
+        return unless o.cartData.current.pic.length
         ui.trigger("hide")
         $.fancybox.open(o.cartData.current.pic,{
             helpers : {
