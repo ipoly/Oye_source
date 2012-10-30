@@ -300,7 +300,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       if (!data.isLogin) {
         return panel.html(templates.panel0);
       }
-      if (!o.fetchMethods.path.test(location.href)) {
+      if (!o.fetchMethods || !o.fetchMethods.path.test(location.href)) {
         return panel.html(templates.panel3.render(data));
       }
       _ref1 = data.list;

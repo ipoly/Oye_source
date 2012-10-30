@@ -1,7 +1,7 @@
 $ = @oye.$
 @oye.fetchMethods = {
     "siteName":"京东"
-    "path":/product/
+    "path":/\bproduct\b/
     "goodsName":-> pageConfig?.product?.name
     "price":-> pageConfig?.product?.price
     "prop":->

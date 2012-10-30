@@ -137,7 +137,8 @@ $ ->
         cart.html(templates.cart.render(data))
 
         return panel.html(templates.panel0) unless data.isLogin
-        return panel.html(templates.panel3.render(data)) unless o.fetchMethods.path.test(location.href)
+        if !o.fetchMethods or !o.fetchMethods.path.test(location.href)
+            return panel.html(templates.panel3.render(data))
 
         data.current = i for i in data.list when i?.url is location.href
         if data.current
