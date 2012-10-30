@@ -8,7 +8,10 @@ win = @
 o = @oye
 $ = o.$
 $ ->
+    # 文件根目录
     o.dir ?= "http://192.168.1.42:8000"
+    # session刷新频率
+    o.sessionTimeout = 20
     $("head").append("<link rel='stylesheet' type='text/css' href='#{o.dir}/main.css' media='all' />")
     $("head").append("<link rel='stylesheet' type='text/css' href='#{o.dir}/source/jquery.fancybox.css' media='all' />")
     $("head").append("<link rel='stylesheet' type='text/css' href='#{o.dir}/source/helpers/jquery.fancybox-thumbs.css' media='all' />")
@@ -186,6 +189,9 @@ $ ->
         })
     )
     .trigger("cartReload")
+
+    # 刷新数据避免session过期
+    setInterval((->o.trigger("cartReload")),1000*60*o.sessionTimeout)
 
 
     # 截屏回调

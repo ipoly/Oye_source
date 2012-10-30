@@ -230,6 +230,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
     if ((_ref = o.dir) == null) {
       o.dir = "http://192.168.1.42:8000";
     }
+    o.sessionTimeout = 20;
     $("head").append("<link rel='stylesheet' type='text/css' href='" + o.dir + "/main.css' media='all' />");
     $("head").append("<link rel='stylesheet' type='text/css' href='" + o.dir + "/source/jquery.fancybox.css' media='all' />");
     $("head").append("<link rel='stylesheet' type='text/css' href='" + o.dir + "/source/helpers/jquery.fancybox-thumbs.css' media='all' />");
@@ -353,6 +354,9 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         }
       });
     }).trigger("cartReload");
+    setInterval((function() {
+      return o.trigger("cartReload");
+    }), 1000 * 60 * o.sessionTimeout);
     return o.screenShotCallback = function(data) {
       this.cartData.timeMark = (new Date()).toLocaleTimeString();
       this.cartData.current.pic = data;

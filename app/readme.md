@@ -2,7 +2,7 @@
 
 ## 文件目录：
 + ### app.js
-    主脚本，由Axtivex通过script标记插入页面。
+    主脚本，由Activex通过script标记插入页面。
 
 + ### hostname.js
      各商城的抓取设置脚本。
@@ -70,7 +70,7 @@
 ### 数据请求地址
 ${oye.dir}/json/cart.jsonp
 
-### request参数
+### request可用参数
 + ##### 增加一个抓取数据
     + **action: add**
     + siteName: string
@@ -78,6 +78,7 @@ ${oye.dir}/json/cart.jsonp
     + price: string
     + prop: string
     + img: string
+    + url: string
 
 + ##### 删除一个商品记录
     + **action: del**
@@ -88,7 +89,7 @@ ${oye.dir}/json/cart.jsonp
 + **格式** jsonp
 + **内容**
     + **isLogin: boolean** 是否登陆
-    + **list: object Array**
+    + **list: object Array** 最新的5条商品记录
         + **id: string** 商品id
         + **goodsName: string** 商品名称
         + **img: string** 商品图片地址
