@@ -21,15 +21,14 @@ $ ->
         ui:"""
             <div class="oye_ui">
                 <form class="oye_cart" action="http://www.qq.com" target="_blank" method="get"></form>
-                <div class="oye_panel">
-                    请<a href="">登录</a>以使用购物车
-                    <button type="button" id="oye_add">一键代购</button>
-                </div>
+                <div class="oye_panel"> </div>
             </div>
         """
 
+        # 购物车列表面板
         cart: juicer("""
             <table>
+                <caption>测试：${timeMark}</caption>
                 <thead>
                     <tr>
                         <td>代购商品</td>
@@ -39,7 +38,7 @@ $ ->
                     </tr>
                 <thead>
                 <tbody>
-                {@each _ as item}
+                {@each list as item}
                     <tr>
                         <th><a href="${item.url}" title="${item.goodsName}">${item.goodsName}</a></th>
                         <td>${item.siteName}</td>
@@ -51,16 +50,24 @@ $ ->
             </table>
         """)
 
-        panel0:"""请<a href="">登录1</a>以使用购物车"""
+        # 未登陆
+        panel0:"""请<a href="">登录</a>以使用购物车"""
 
+        # 当前页已在购物车中
         panel1:juicer("""
             <button type="button" id="oye_screenshot">添加截图</button>
             <span class="oye_icon oye_inPic">${current.pic.length}</span>
             <span class="oye_icon oye_inCart">${list.length}</span>
         """)
 
+        # 当前页不在购物车中
         panel2:juicer("""
             <button type="button" id="oye_add">一键代购</button>
+            <span class="oye_icon oye_inCart">${list.length}</span>
+        """)
+
+        # 当前页不是商品详细页
+        panel3:juicer("""
             <span class="oye_icon oye_inCart">${list.length}</span>
         """)
     }
@@ -71,6 +78,13 @@ $ ->
     .on("show hide",(e)-> $(@)[e.type]())
     # 获取数据
     .on("click","#oye_add",-> o.trigger("fetchdata"))
+    # 删除商品
+    .on("click","[data-id]",->
+        data = {}
+        data.id = $(@).data("id")
+        data.action = "del"
+        o.trigger("cartReload",data)
+    )
     # 调用截图插件
     .on("click","#oye_screenshot",->
         trigger = $("#oye_trigger")
@@ -103,6 +117,10 @@ $ ->
                 ui.trigger("show")
         })
     )
+    .on("keyup","input[type=number]",->
+        t = $(@)
+        t.val(0) unless Number(t.val())
+    )
     # 显示购物车
     .on("mouseenter",".oye_inCart",->
         $(@).closest(".oye_ui").find(".oye_cart").slideDown()
@@ -116,8 +134,10 @@ $ ->
         t = $(@)
         panel = t.find(".oye_panel")
         cart = t.find(".oye_cart")
+        cart.html(templates.cart.render(data))
 
         return panel.html(templates.panel0) unless data.isLogin
+        return panel.html(templates.panel3.render(data)) unless o.fetchMethods.path.test(location.href)
 
         data.current = i for i in data.list when i?.url is location.href
         if data.current
@@ -125,7 +145,6 @@ $ ->
         else
             panel.html(templates.panel2.render(data))
 
-        cart.html(templates.cart.render(data.list))
     )
 
     $("body").append(ui)
@@ -147,7 +166,9 @@ $ ->
             data[name] = if $.type(value) is "function" then value() else value
 
         data.url = win.location.href
+        data.action = "add"
         delete data.path
+        console.log data
         @trigger("cartReload",data)
     )
     # 刷新购物车数据
@@ -158,6 +179,7 @@ $ ->
             dataType:"jsonp"
             jsonpCallback:"jsonp_getCart"
             success:(data)->
+                data.timeMark = (new Date()).toLocaleTimeString()
                 o.cartData = data
                 ui.trigger("refresh",arguments)
         })
@@ -167,6 +189,7 @@ $ ->
 
     # 截屏回调
     o.screenShotCallback = (data)->
+        @cartData.timeMark = (new Date()).toLocaleTimeString()
         @cartData.current.pic = data
         ui.trigger("refresh",@cartData)
 

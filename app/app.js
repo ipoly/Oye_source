@@ -240,16 +240,23 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       return ui.addClass("canFetched");
     });
     templates = {
-      ui: "<div class=\"oye_ui\">\n    <form class=\"oye_cart\" action=\"http://www.qq.com\" target=\"_blank\" method=\"get\"></form>\n    <div class=\"oye_panel\">\n        请<a href=\"\">登录</a>以使用购物车\n        <button type=\"button\" id=\"oye_add\">一键代购</button>\n    </div>\n</div>",
-      cart: juicer("<table>\n    <thead>\n        <tr>\n            <td>代购商品</td>\n            <td>商城</td>\n            <td>代购数量</td>\n            <td>操作</td>\n        </tr>\n    <thead>\n    <tbody>\n    {@each _ as item}\n        <tr>\n            <th><a href=\"${item.url}\" title=\"${item.goodsName}\">${item.goodsName}</a></th>\n            <td>${item.siteName}</td>\n            <td><input name=\"number\" type=\"number\"/></td>\n            <td><span data-id=\"${item.id}\">删除</span></td>\n        </tr>\n    {@/each}\n    </tbody>\n</table>"),
-      panel0: "请<a href=\"\">登录1</a>以使用购物车",
+      ui: "<div class=\"oye_ui\">\n    <form class=\"oye_cart\" action=\"http://www.qq.com\" target=\"_blank\" method=\"get\"></form>\n    <div class=\"oye_panel\"> </div>\n</div>",
+      cart: juicer("<table>\n    <caption>测试：${timeMark}</caption>\n    <thead>\n        <tr>\n            <td>代购商品</td>\n            <td>商城</td>\n            <td>代购数量</td>\n            <td>操作</td>\n        </tr>\n    <thead>\n    <tbody>\n    {@each list as item}\n        <tr>\n            <th><a href=\"${item.url}\" title=\"${item.goodsName}\">${item.goodsName}</a></th>\n            <td>${item.siteName}</td>\n            <td><input name=\"number\" type=\"number\"/></td>\n            <td><span data-id=\"${item.id}\">删除</span></td>\n        </tr>\n    {@/each}\n    </tbody>\n</table>"),
+      panel0: "请<a href=\"\">登录</a>以使用购物车",
       panel1: juicer("<button type=\"button\" id=\"oye_screenshot\">添加截图</button>\n<span class=\"oye_icon oye_inPic\">${current.pic.length}</span>\n<span class=\"oye_icon oye_inCart\">${list.length}</span>"),
-      panel2: juicer("<button type=\"button\" id=\"oye_add\">一键代购</button>\n<span class=\"oye_icon oye_inCart\">${list.length}</span>")
+      panel2: juicer("<button type=\"button\" id=\"oye_add\">一键代购</button>\n<span class=\"oye_icon oye_inCart\">${list.length}</span>"),
+      panel3: juicer("<span class=\"oye_icon oye_inCart\">${list.length}</span>")
     };
     ui = $(templates.ui).on("show hide", function(e) {
       return $(this)[e.type]();
     }).on("click", "#oye_add", function() {
       return o.trigger("fetchdata");
+    }).on("click", "[data-id]", function() {
+      var data;
+      data = {};
+      data.id = $(this).data("id");
+      data.action = "del";
+      return o.trigger("cartReload", data);
     }).on("click", "#oye_screenshot", function() {
       var trigger;
       trigger = $("#oye_trigger");
@@ -274,6 +281,12 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
           return ui.trigger("show");
         }
       });
+    }).on("keyup", "input[type=number]", function() {
+      var t;
+      t = $(this);
+      if (!Number(t.val())) {
+        return t.val(0);
+      }
     }).on("mouseenter", ".oye_inCart", function() {
       return $(this).closest(".oye_ui").find(".oye_cart").slideDown();
     }).on("mouseleave", function() {
@@ -283,8 +296,12 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       t = $(this);
       panel = t.find(".oye_panel");
       cart = t.find(".oye_cart");
+      cart.html(templates.cart.render(data));
       if (!data.isLogin) {
         return panel.html(templates.panel0);
+      }
+      if (!o.fetchMethods.path.test(location.href)) {
+        return panel.html(templates.panel3.render(data));
       }
       _ref1 = data.list;
       for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
@@ -294,11 +311,10 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         }
       }
       if (data.current) {
-        panel.html(templates.panel1.render(data));
+        return panel.html(templates.panel1.render(data));
       } else {
-        panel.html(templates.panel2.render(data));
+        return panel.html(templates.panel2.render(data));
       }
-      return cart.html(templates.cart.render(data.list));
     });
     $("body").append(ui);
     o.on = function() {
@@ -320,7 +336,9 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         data[name] = $.type(value) === "function" ? value() : value;
       }
       data.url = win.location.href;
+      data.action = "add";
       delete data.path;
+      console.log(data);
       return this.trigger("cartReload", data);
     }).on("cartReload", function(e, data) {
       return $.ajax({
@@ -329,12 +347,14 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         dataType: "jsonp",
         jsonpCallback: "jsonp_getCart",
         success: function(data) {
+          data.timeMark = (new Date()).toLocaleTimeString();
           o.cartData = data;
           return ui.trigger("refresh", arguments);
         }
       });
     }).trigger("cartReload");
     return o.screenShotCallback = function(data) {
+      this.cartData.timeMark = (new Date()).toLocaleTimeString();
       this.cartData.current.pic = data;
       return ui.trigger("refresh", this.cartData);
     };

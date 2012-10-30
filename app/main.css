@@ -27,7 +27,7 @@ body {
 }
 .oye_ui .oye_cart a {
   display: inline-block;
-  width: 6em;
+  width: 16em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
