@@ -1,24 +1,54 @@
 # 前端功能说明
 
 ## 文件目录：
-+ ###app.js
++ ### app.js
     主脚本，由Axtivex通过script标记插入页面。
 
-+ ###hostname.js
++ ### hostname.js
      各商城的抓取设置脚本。
 
-+ ###src
++ ### src
      源文件目录。
 
+=================
+
+## 响应的域名
++ #### 京东
+    + www.360buy.com
+    + book.360buy.com
+    + mvd.360buy.com
+
++ #### 一淘和一淘商城
+    + www.1mall.com
+    + www.yihaodian.com
+
++ #### 伊藤
+    + www.yiteng365.com
+
++ #### 淘宝
+    + www.taobao.com
+    + s.taobao.com
+    + item.taobao.com
+
++ #### 天猫
+    + www.tmall.com
+    + list.tmall.com
+    + temai.tmall.com
+    + detail.tmall.com
+
+========================
+
 ## 工作流程
-脚本文件载入后，自动调用当前hostname对应的**抓取设置脚本**，如果没有对应的脚本，则只显示“截图订单”按钮。
+脚本文件载入后，自动调用当前hostname对应的**抓取设置脚本**;
 
-截图订单的图片数据采用**base64**格式传输；
+同时请求**购物车数据**，如果验证登陆未通过，则插件面板为“未登录”状态;
 
-抓取的商品图片使用其原本的图片路径传输；
+如果没有对应的**抓取设置脚本**，或经脚本验证当前页不是产品详细页，则插件面板为“购物车”状态;
 
-商户名称和商品地址，不在用户界面内显示，用隐藏的表单项传输；
+否则验证当前页是否已存在购物车中，以决定插件面板为“添加订单”状态或“添加截图状态”。
 
+
+========================
 
 ## 公开接口
 + ###oye
@@ -29,47 +59,44 @@
 
     默认调试用的地址是192.168.1.42:8000
 
-+ ###oye.screenShot()
-    覆盖它以设置启动截图的方法
-
-+ ###oye.screenShotCallback(o)
-    截图完成后的回调函数，期待一个对象作为参数
-
-    *o.img_path* :截图在本地的缓存地址
-
-    *o.img_64* :截图的base64值
-
-## 私有接口
-+ ###oye.ui
-    jqDom对象，本插件的ui根节点
-
-+ ###oye.tmpFetch
-    已编译的juicer模板，用于抓取数据的展示
-
-+ ###oye.tmpFetchFail
-    已编译的juicer模板，用于抓取失败的展示
-
-+ ###oye.tmpShot
-    已编译的juicer模板，用于截图订单的展示
-
-+ ###oye.fetch()
-    数据抓取方法，返回值为商品信息数据对象
-
-+ ###oye.popUp(dom)
-    弹出窗方法，用于显示结果，参数为文本或者dom对象
-
-+ ###oye.checkRequired(data)
-    数据验证方法，**data**为商品信息数据对象，返回true或fasle
-
-    验证失败时会有log信息供调试
-
-+ ###oye.rePosition()
-    刷新弹出窗位置
++ ###oye.screenShotCallback(Array)
+    截图完成后的回调函数，由插件调用，期待一个**图片地址数组**作为参数
 
 
+========================
 
 
+## 服务器交互
+### 数据请求地址
+${oye.dir}/json/cart.jsonp
 
+### request参数
++ ##### 增加一个抓取数据
+    + **action: add**
+    + siteName: string
+    + goodsName: string
+    + price: string
+    + prop: string
+    + img: string
+
++ ##### 删除一个商品记录
+    + **action: del**
+    + id: string
+
+
+### response数据
++ **格式** jsonp
++ **内容**
+    + **isLogin: boolean** 是否登陆
+    + **list: object Array**
+        + **id: string** 商品id
+        + **goodsName: string** 商品名称
+        + **img: string** 商品图片地址
+        + **price: string** 商品价格
+        + **prop: string** 商品属性
+        + **siteNmae: string** 商城名称
+        + **url: string** 商品地址
+        + **pic: string Array** 商品截图列表
 
 
 
