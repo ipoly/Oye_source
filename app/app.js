@@ -230,6 +230,14 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
     if ((_ref = o.dir) == null) {
       o.dir = "http://192.168.1.42:8000";
     }
+    o.cartData = {
+      status: {
+        action: "",
+        Error: "",
+        msg: ""
+      },
+      list: []
+    };
     o.sessionTimeout = 20;
     $("head").append("<link rel='stylesheet' type='text/css' href='" + o.dir + "/main.css' media='all' />");
     $("head").append("<link rel='stylesheet' type='text/css' href='" + o.dir + "/source/jquery.fancybox.css' media='all' />");
@@ -241,12 +249,12 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       return ui.addClass("canFetched");
     });
     templates = {
-      ui: "<div class=\"oye_ui\">\n    <a id=\"oye_logo\" href=\"\"></a>\n    <div id=\"oye_notice\">adfa</div>\n    <form class=\"oye_cart\" action=\"http://www.qq.com\" target=\"_blank\" method=\"get\"></form>\n    <div class=\"oye_panel\"> </div>\n</div>",
-      cart: juicer("<table>\n    <caption>测试：${timeMark}</caption>\n    <thead>\n        <tr>\n            <td></td>\n            <td>代购商品</td>\n            <td>商城</td>\n            <td>代购数量</td>\n            <td>操作</td>\n        </tr>\n    <thead>\n    <tbody>\n    {@each list as item}\n        <tr>\n            <th><a href=\"${item.url}\" title=\"${item.goodsName}\"><img src=\"${item.img}\"/></a></th>\n            <td><a href=\"${item.url}\" title=\"${item.goodsName}\">${item.goodsName}</a></td>\n            <td>${item.siteName}</td>\n            <td>\n                <input name=\"id\" type=\"hidden\" value=\"${item.id}\"/>\n                <input data-id=\"${item.id}\" name=\"number\" type=\"number\" value=\"${item.number}\"/>\n            </td>\n            <td><span data-id=\"${item.id}\">删除</span></td>\n        </tr>\n    {@/each}\n    </tbody>\n    <tfoot>\n        <tr>\n            <td colspan=\"5\">\n                <button type=\"submit\" id=\"oye_submit\"></button>\n                <p>查看操作完整购物车，请前往 <a href=\"\">噢叶商城购物车</a></p>\n            </td>\n        </tr>\n    </tfoot>\n</table>"),
-      panel0: "点我 <a href=\"\">登录</a> 以使用代购功能",
+      ui: "<div class=\"oye_ui\">\n    <a id=\"oye_logo\" href=\"http://www.oye.com\"></a>\n    <div id=\"oye_notice\"></div>\n    <form class=\"oye_cart\" action=\"http://www.qq.com\" target=\"_blank\" method=\"get\"></form>\n    <div class=\"oye_panel\"> </div>\n</div>",
+      cart: juicer("<table>\n    <caption>测试：${timeMark}</caption>\n    <thead>\n        <tr>\n            <td></td>\n            <td>代购商品</td>\n            <td>商城</td>\n            <td>代购数量</td>\n            <td>操作</td>\n        </tr>\n    <thead>\n    <tbody>\n    {@each list as item}\n        <tr>\n            <th><a href=\"${item.url}\" title=\"${item.goodsName}\"><img src=\"${item.img}\"/></a></th>\n            <td><a href=\"${item.url}\" title=\"${item.goodsName}\">${item.goodsName}</a></td>\n            <td>${item.siteName}</td>\n            <td>\n                <input name=\"id\" type=\"hidden\" value=\"${item.CartID}\"/>\n                <input data-id=\"${item.CartID}\" name=\"number\" type=\"number\" value=\"${item.number}\"/>\n            </td>\n            <td><span data-id=\"${item.CartID}\">删除</span></td>\n        </tr>\n    {@/each}\n    </tbody>\n    <tfoot>\n        <tr>\n            <td colspan=\"5\">\n                <button type=\"submit\" id=\"oye_submit\"></button>\n                <p>查看操作完整购物车，请前往 <a href=\"\">噢叶商城购物车</a></p>\n            </td>\n        </tr>\n    </tfoot>\n</table>"),
+      panel0: "点我 <a href=\"http://www.oye.com/user.php?act=default\">登录</a> 以使用代购功能",
       panel1: juicer("<a class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>\n<a class=\"oye_icon oye_icon_img\"><span class=\"oye_inPic\">${current.pic.length}</span></a>\n<a class=\"oye_icon oye_icon_camera\" id=\"oye_screenshot\"></a>"),
       panel2: juicer("<a class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>\n<button type=\"button\" id=\"oye_add\"></button>"),
-      panel3: juicer("<span class=\"oye_icon oye_inCart\">${list.length}</span>")
+      panel3: juicer("<a class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>")
     };
     ui = $(templates.ui).on("show hide", function(e) {
       return $(this)[e.type]();
@@ -255,14 +263,14 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
     }).on("click", "span[data-id]", function() {
       var data;
       data = {};
-      data.id = $(this).data("id");
+      data.CartID = $(this).data("id");
       data.action = "del";
       return o.trigger("cartReload", data);
     }).on("click", "#oye_screenshot", function() {
       var trigger;
-      trigger = $("#oye_trigger");
+      trigger = $("#oye_shot");
       if (trigger.length) {
-        return trigger.trigger("click");
+        return trigger[0].click();
       } else {
         return o.screenShotCallback(["http://pic.cnhan.com/uploadfile/2012/0905/20120905040655740.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700746.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700342.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040831340.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832569.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832588.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040833724.jpg"]);
       }
@@ -309,7 +317,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       panel = t.find(".oye_panel");
       cart = t.find(".oye_cart");
       cart.html(templates.cart.render(data));
-      if (!data.isLogin) {
+      if (data.status.Error === 1) {
         return panel.html(templates.panel0);
       }
       if (!o.fetchMethods || !o.fetchMethods.path.test(location.href)) {
@@ -323,6 +331,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         }
       }
       if (data.current) {
+        $("#oye_id").val(data.current.CartID);
         return panel.html(templates.panel1.render(data));
       } else {
         return panel.html(templates.panel2.render(data));
@@ -335,7 +344,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       n = $(this).find("#oye_notice");
       n.html(data);
       clearTimeout(o.alertTimer);
-      n.fadeIn();
+      n.stop(true, true).fadeIn();
       return o.alertTimer = setTimeout(function() {
         return n.fadeOut();
       }, 3000);
@@ -360,32 +369,47 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         data[name] = $.type(value) === "function" ? value() : value;
       }
       data.url = win.location.href;
-      data.action = "add";
+      data.action = "AddCart";
+      data.number = 1;
       delete data.path;
-      console.log(data);
       return this.trigger("cartReload", data);
     }).on("cartReload", function(e, data) {
-      return $.ajax({
-        url: "" + this.dir + "/json/cart.jsonp",
-        data: data,
-        dataType: "jsonp",
-        jsonpCallback: "jsonp_getCart",
-        success: function(data) {
-          data.timeMark = (new Date()).toLocaleTimeString();
-          o.cartData = data;
-          ui.trigger("refresh", arguments);
-          return ui.trigger("alert", "恭喜您！商品已加入购物车。");
+      var cartData, para;
+      cartData = o.cartData;
+      para = {
+        action: "Cartlist"
+      };
+      $.extend(para, data);
+      cartData.status.action = para.action;
+      return $.getJSON("http://www.oye.com/api/plugins.php?callback=?", para, function(data) {
+        if (data.Error) {
+          $.extend(cartData.status, data);
+          ui.trigger("alert", data.msg);
+        } else {
+          cartData.list = data;
+          if (cartData.status.action === "AddCart") {
+            ui.trigger("恭喜您！商品已加入购物车。");
+          }
+          if (cartData.status.action === "DelCart") {
+            ui.trigger("商品已删除。");
+          }
         }
+        cartData.timeMark = (new Date()).toLocaleTimeString();
+        return ui.trigger("refresh", cartData);
       });
     }).trigger("cartReload");
     setInterval((function() {
       return o.trigger("cartReload");
     }), 1000 * 60 * o.sessionTimeout);
     return o.screenShotCallback = function(data) {
-      this.cartData.timeMark = (new Date()).toLocaleTimeString();
-      this.cartData.current.pic = data;
-      ui.trigger("refresh", this.cartData);
-      return ui.trigger("alert", "恭喜您！截图已添加。");
+      if (data.Error) {
+        return ui.trigger("alert", data.msg);
+      } else {
+        this.cartData.timeMark = (new Date()).toLocaleTimeString();
+        this.cartData.current.pic = data;
+        ui.trigger("refresh", this.cartData);
+        return ui.trigger("alert", "恭喜您！截图已添加。");
+      }
     };
   });
 

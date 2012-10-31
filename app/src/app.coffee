@@ -10,6 +10,8 @@ $ = o.$
 $ ->
     # 文件根目录
     o.dir ?= "http://192.168.1.42:8000"
+    # 购物车数据缓存
+    o.cartData = {status:{action:"",Error:"",msg:""},list:[]}
     # session刷新频率
     o.sessionTimeout = 20
     $("head").append("<link rel='stylesheet' type='text/css' href='#{o.dir}/main.css' media='all' />")
@@ -23,8 +25,8 @@ $ ->
     templates = {
         ui:"""
             <div class="oye_ui">
-                <a id="oye_logo" href=""></a>
-                <div id="oye_notice">adfa</div>
+                <a id="oye_logo" href="http://www.oye.com"></a>
+                <div id="oye_notice"></div>
                 <form class="oye_cart" action="http://www.qq.com" target="_blank" method="get"></form>
                 <div class="oye_panel"> </div>
             </div>
@@ -50,10 +52,10 @@ $ ->
                         <td><a href="${item.url}" title="${item.goodsName}">${item.goodsName}</a></td>
                         <td>${item.siteName}</td>
                         <td>
-                            <input name="id" type="hidden" value="${item.id}"/>
-                            <input data-id="${item.id}" name="number" type="number" value="${item.number}"/>
+                            <input name="id" type="hidden" value="${item.CartID}"/>
+                            <input data-id="${item.CartID}" name="number" type="number" value="${item.number}"/>
                         </td>
-                        <td><span data-id="${item.id}">删除</span></td>
+                        <td><span data-id="${item.CartID}">删除</span></td>
                     </tr>
                 {@/each}
                 </tbody>
@@ -69,7 +71,7 @@ $ ->
         """)
 
         # 未登陆
-        panel0:"""点我 <a href="">登录</a> 以使用代购功能"""
+        panel0:"""点我 <a href="http://www.oye.com/user.php?act=default">登录</a> 以使用代购功能"""
 
         # 当前页已在购物车中
         panel1:juicer("""
@@ -86,7 +88,7 @@ $ ->
 
         # 当前页不是商品详细页
         panel3:juicer("""
-            <span class="oye_icon oye_inCart">${list.length}</span>
+            <a class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
         """)
     }
 
@@ -99,15 +101,15 @@ $ ->
     # 删除商品
     .on("click","span[data-id]",->
         data = {}
-        data.id = $(@).data("id")
+        data.CartID = $(@).data("id")
         data.action = "del"
         o.trigger("cartReload",data)
     )
     # 调用截图插件
     .on("click","#oye_screenshot",->
-        trigger = $("#oye_trigger")
+        trigger = $("#oye_shot")
         if trigger.length
-            trigger.trigger("click")
+            trigger[0].click()
         else
             # 测试用数据
             o.screenShotCallback([
@@ -162,12 +164,17 @@ $ ->
         cart = t.find(".oye_cart")
         cart.html(templates.cart.render(data))
 
-        return panel.html(templates.panel0) unless data.isLogin
+        # 判断是否登陆,Error==1 表示未登陆
+        return panel.html(templates.panel0) if data.status.Error is 1
+
+        # 判断当前页是否商品详细页
         if !o.fetchMethods or !o.fetchMethods.path.test(location.href)
             return panel.html(templates.panel3.render(data))
 
+        # 判断当前页是否已在购物车中
         data.current = i for i in data.list when i?.url is location.href
         if data.current
+            $("#oye_id").val(data.current.CartID)
             panel.html(templates.panel1.render(data))
         else
             panel.html(templates.panel2.render(data))
@@ -179,7 +186,7 @@ $ ->
         n = $(@).find("#oye_notice")
         n.html(data)
         clearTimeout(o.alertTimer)
-        n.fadeIn()
+        n.stop(true,true).fadeIn()
         o.alertTimer = setTimeout(->
             n.fadeOut()
         ,3000)
@@ -204,24 +211,33 @@ $ ->
             data[name] = if $.type(value) is "function" then value() else value
 
         data.url = win.location.href
-        data.action = "add"
+        data.action = "AddCart"
+        data.number = 1
         delete data.path
-        console.log data
         @trigger("cartReload",data)
     )
     # 刷新购物车数据
     .on("cartReload",(e,data)->
-        $.ajax({
-            url:"#{@dir}/json/cart.jsonp"
-            data
-            dataType:"jsonp"
-            jsonpCallback:"jsonp_getCart"
-            success:(data)->
-                data.timeMark = (new Date()).toLocaleTimeString()
-                o.cartData = data
-                ui.trigger("refresh",arguments)
-                ui.trigger("alert","恭喜您！商品已加入购物车。")
-        })
+        cartData = o.cartData
+        para = {action:"Cartlist"}
+        $.extend(para,data)
+        cartData.status.action = para.action
+        $.getJSON(
+            "http://www.oye.com/api/plugins.php?callback=?",
+            para,
+            (data)->
+                if data.Error
+                    $.extend(cartData.status,data)
+                    ui.trigger("alert",data.msg)
+                else
+                    cartData.list = data
+                    if cartData.status.action is "AddCart"
+                        ui.trigger("恭喜您！商品已加入购物车。")
+                    if cartData.status.action is "DelCart"
+                        ui.trigger("商品已删除。")
+                cartData.timeMark = (new Date()).toLocaleTimeString()
+                ui.trigger("refresh",cartData)
+        )
     )
     .trigger("cartReload")
 
@@ -231,10 +247,13 @@ $ ->
 
     # 截屏回调
     o.screenShotCallback = (data)->
-        @cartData.timeMark = (new Date()).toLocaleTimeString()
-        @cartData.current.pic = data
-        ui.trigger("refresh",@cartData)
-        ui.trigger("alert","恭喜您！截图已添加。")
+        if data.Error
+            ui.trigger("alert",data.msg)
+        else
+            @cartData.timeMark = (new Date()).toLocaleTimeString()
+            @cartData.current.pic = data
+            ui.trigger("refresh",@cartData)
+            ui.trigger("alert","恭喜您！截图已添加。")
 
 
 
