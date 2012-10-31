@@ -98,6 +98,7 @@ ${oye.dir}/json/cart.jsonp
         + **siteNmae: string** 商城名称
         + **url: string** 商品地址
         + **pic: string Array** 商品截图列表
+        + **number: int** 订购数量，默认为1
 
 
 

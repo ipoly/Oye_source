@@ -23,6 +23,8 @@ $ ->
     templates = {
         ui:"""
             <div class="oye_ui">
+                <a id="oye_logo" href=""></a>
+                <div id="oye_notice">adfa</div>
                 <form class="oye_cart" action="http://www.qq.com" target="_blank" method="get"></form>
                 <div class="oye_panel"> </div>
             </div>
@@ -34,6 +36,7 @@ $ ->
                 <caption>测试：${timeMark}</caption>
                 <thead>
                     <tr>
+                        <td></td>
                         <td>代购商品</td>
                         <td>商城</td>
                         <td>代购数量</td>
@@ -43,30 +46,42 @@ $ ->
                 <tbody>
                 {@each list as item}
                     <tr>
-                        <th><a href="${item.url}" title="${item.goodsName}">${item.goodsName}</a></th>
+                        <th><a href="${item.url}" title="${item.goodsName}"><img src="${item.img}"/></a></th>
+                        <td><a href="${item.url}" title="${item.goodsName}">${item.goodsName}</a></td>
                         <td>${item.siteName}</td>
-                        <td><input name="number" type="number"/></td>
+                        <td>
+                            <input name="id" type="hidden" value="${item.id}"/>
+                            <input data-id="${item.id}" name="number" type="number" value="${item.number}"/>
+                        </td>
                         <td><span data-id="${item.id}">删除</span></td>
                     </tr>
                 {@/each}
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5">
+                            <button type="submit" id="oye_submit"></button>
+                            <p>查看操作完整购物车，请前往 <a href="">噢叶商城购物车</a></p>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         """)
 
         # 未登陆
-        panel0:"""请<a href="">登录</a>以使用购物车"""
+        panel0:"""点我 <a href="">登录</a> 以使用代购功能"""
 
         # 当前页已在购物车中
         panel1:juicer("""
-            <button type="button" id="oye_screenshot">添加截图</button>
-            <span class="oye_icon oye_inPic">${current.pic.length}</span>
-            <span class="oye_icon oye_inCart">${list.length}</span>
+            <a class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
+            <a class="oye_icon oye_icon_img"><span class="oye_inPic">${current.pic.length}</span></a>
+            <a class="oye_icon oye_icon_camera" id="oye_screenshot"></a>
         """)
 
         # 当前页不在购物车中
         panel2:juicer("""
-            <button type="button" id="oye_add">一键代购</button>
-            <span class="oye_icon oye_inCart">${list.length}</span>
+            <a class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
+            <button type="button" id="oye_add"></button>
         """)
 
         # 当前页不是商品详细页
@@ -82,7 +97,7 @@ $ ->
     # 获取数据
     .on("click","#oye_add",-> o.trigger("fetchdata"))
     # 删除商品
-    .on("click","[data-id]",->
+    .on("click","span[data-id]",->
         data = {}
         data.id = $(@).data("id")
         data.action = "del"
@@ -106,7 +121,7 @@ $ ->
             ])
     )
     # 打开截图浏览
-    .on("click",".oye_inPic",->
+    .on("click",".oye_icon_img",->
         return unless o.cartData.current.pic.length
         ui.trigger("hide")
         $.fancybox.open(o.cartData.current.pic,{
@@ -124,13 +139,21 @@ $ ->
         t = $(@)
         t.val(0) unless Number(t.val())
     )
-    # 显示购物车
-    .on("mouseenter",".oye_inCart",->
-        $(@).closest(".oye_ui").find(".oye_cart").slideDown()
-    )
-    # 隐藏购物车
-    .on("mouseleave",->
-        $(@).find(".oye_cart").slideUp()
+    # 显示购物车列表
+    .on("hover",".oye_icon_cart,.oye_cart",(e)->
+        cart = $(".oye_cart")
+        icon = $(".oye_icon_cart")
+        clearTimeout(o.timer)
+        type = e.type
+        o.timer = setTimeout(
+            ->
+                if type is "mouseenter"
+                    cart.show()
+                    icon.addClass("active")
+                else
+                    cart.hide()
+                    icon.removeClass("active")
+        ,300)
     )
     # 刷新ui面板
     .on("refresh",(e,data)->
@@ -149,6 +172,17 @@ $ ->
         else
             panel.html(templates.panel2.render(data))
 
+    )
+    # 消息提示
+    .on("alert",(e,data)->
+        return unless data?
+        n = $(@).find("#oye_notice")
+        n.html(data)
+        clearTimeout(o.alertTimer)
+        n.fadeIn()
+        o.alertTimer = setTimeout(->
+            n.fadeOut()
+        ,3000)
     )
 
     $("body").append(ui)
@@ -186,6 +220,7 @@ $ ->
                 data.timeMark = (new Date()).toLocaleTimeString()
                 o.cartData = data
                 ui.trigger("refresh",arguments)
+                ui.trigger("alert","恭喜您！商品已加入购物车。")
         })
     )
     .trigger("cartReload")
@@ -199,6 +234,8 @@ $ ->
         @cartData.timeMark = (new Date()).toLocaleTimeString()
         @cartData.current.pic = data
         ui.trigger("refresh",@cartData)
+        ui.trigger("alert","恭喜您！截图已添加。")
+
 
 
 

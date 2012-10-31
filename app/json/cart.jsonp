@@ -8,6 +8,7 @@ jsonp_getCart({
         prop: "“黄印花”，“130”",
         siteName: "京东",
         url: "http://www.360buy.com/product/1007770523.html",
+        number:1,
         pic: []
     }, {
         id: "adjj9z8cyvoihvk",
@@ -16,6 +17,7 @@ jsonp_getCart({
         price: "17699.00",
         prop: "",
         siteName: "京东",
+        number:1,
         url: "http://www.360buy.com/product/135896.html",
         pic: ["http://pic.cnhan.com/uploadfile/2012/0905/20120905040655740.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700746.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700342.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040831340.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832569.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832588.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040833724.jpg"]
     }, {
@@ -26,6 +28,7 @@ jsonp_getCart({
         prop: "“048黑色”",
         siteName: "京东",
         url: "http://www.360buy.com/product/549046.html",
+        number:1,
         pic: []
     }, {
         id: "adjj9z8cyvoihvk",
@@ -34,6 +37,7 @@ jsonp_getCart({
         price: "5888.00",
         prop: "",
         siteName: "京东",
+        number:1,
         url: "http://www.360buy.com/product/134178.html",
         pic: ["http://pic.cnhan.com/uploadfile/2012/0905/20120905040655740.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700746.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040700342.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040831340.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832569.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040832588.jpg", "http://pic.cnhan.com/uploadfile/2012/0905/20120905040833724.jpg"]
     }]
