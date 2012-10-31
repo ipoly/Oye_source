@@ -71,24 +71,24 @@ $ ->
         """)
 
         # 未登陆
-        panel0:"""点我 <a href="http://www.oye.com/user.php?act=default">登录</a> 以使用代购功能"""
+        panel0:"""<span class="lh40">点我 <a href="http://www.oye.com/user.php?act=default">登录</a> 以使用代购功能</span>"""
 
         # 当前页已在购物车中
         panel1:juicer("""
-            <a class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
-            <a class="oye_icon oye_icon_img"><span class="oye_inPic">${current.pic.length}</span></a>
-            <a class="oye_icon oye_icon_camera" id="oye_screenshot"></a>
+            <a title="查看购物车" class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
+            <a title="查看截图" class="oye_icon oye_icon_img"><span class="oye_inPic">${current.pic.length}</span></a>
+            <a title="添加截图" class="oye_icon oye_icon_camera" id="oye_screenshot"></a>
         """)
 
         # 当前页不在购物车中
         panel2:juicer("""
-            <a class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
-            <button type="button" id="oye_add"></button>
+            <a title="查看截图" class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
+            <button title="立即订购" type="button" id="oye_add"></button>
         """)
 
         # 当前页不是商品详细页
         panel3:juicer("""
-            <a class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
+            <a title="查看购物车" class="oye_icon oye_icon_cart"><i class="oye_cart_part"></i><span class="oye_inCart">${list.length}</span></a>
         """)
     }
 
@@ -173,6 +173,7 @@ $ ->
 
         # 判断当前页是否已在购物车中
         data.current = i for i in data.list when i?.url is location.href
+        console.log data
         if data.current
             $("#oye_id").val(data.current.CartID)
             panel.html(templates.panel1.render(data))
@@ -232,9 +233,9 @@ $ ->
                 else
                     cartData.list = data
                     if cartData.status.action is "AddCart"
-                        ui.trigger("恭喜您！商品已加入购物车。")
+                        ui.trigger("alert","恭喜您！商品已加入购物车。点这里可以添加截图哟&darr;")
                     if cartData.status.action is "DelCart"
-                        ui.trigger("商品已删除。")
+                        ui.trigger("alert","商品已删除。")
                 cartData.timeMark = (new Date()).toLocaleTimeString()
                 ui.trigger("refresh",cartData)
         )

@@ -251,10 +251,10 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
     templates = {
       ui: "<div class=\"oye_ui\">\n    <a id=\"oye_logo\" href=\"http://www.oye.com\"></a>\n    <div id=\"oye_notice\"></div>\n    <form class=\"oye_cart\" action=\"http://www.qq.com\" target=\"_blank\" method=\"get\"></form>\n    <div class=\"oye_panel\"> </div>\n</div>",
       cart: juicer("<table>\n    <caption>测试：${timeMark}</caption>\n    <thead>\n        <tr>\n            <td></td>\n            <td>代购商品</td>\n            <td>商城</td>\n            <td>代购数量</td>\n            <td>操作</td>\n        </tr>\n    <thead>\n    <tbody>\n    {@each list as item}\n        <tr>\n            <th><a href=\"${item.url}\" title=\"${item.goodsName}\"><img src=\"${item.img}\"/></a></th>\n            <td><a href=\"${item.url}\" title=\"${item.goodsName}\">${item.goodsName}</a></td>\n            <td>${item.siteName}</td>\n            <td>\n                <input name=\"id\" type=\"hidden\" value=\"${item.CartID}\"/>\n                <input data-id=\"${item.CartID}\" name=\"number\" type=\"number\" value=\"${item.number}\"/>\n            </td>\n            <td><span data-id=\"${item.CartID}\">删除</span></td>\n        </tr>\n    {@/each}\n    </tbody>\n    <tfoot>\n        <tr>\n            <td colspan=\"5\">\n                <button type=\"submit\" id=\"oye_submit\"></button>\n                <p>查看操作完整购物车，请前往 <a href=\"\">噢叶商城购物车</a></p>\n            </td>\n        </tr>\n    </tfoot>\n</table>"),
-      panel0: "点我 <a href=\"http://www.oye.com/user.php?act=default\">登录</a> 以使用代购功能",
-      panel1: juicer("<a class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>\n<a class=\"oye_icon oye_icon_img\"><span class=\"oye_inPic\">${current.pic.length}</span></a>\n<a class=\"oye_icon oye_icon_camera\" id=\"oye_screenshot\"></a>"),
-      panel2: juicer("<a class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>\n<button type=\"button\" id=\"oye_add\"></button>"),
-      panel3: juicer("<a class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>")
+      panel0: "<span class=\"lh40\">点我 <a href=\"http://www.oye.com/user.php?act=default\">登录</a> 以使用代购功能</span>",
+      panel1: juicer("<a title=\"查看购物车\" class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>\n<a title=\"查看截图\" class=\"oye_icon oye_icon_img\"><span class=\"oye_inPic\">${current.pic.length}</span></a>\n<a title=\"添加截图\" class=\"oye_icon oye_icon_camera\" id=\"oye_screenshot\"></a>"),
+      panel2: juicer("<a title=\"查看截图\" class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>\n<button title=\"立即订购\" type=\"button\" id=\"oye_add\"></button>"),
+      panel3: juicer("<a title=\"查看购物车\" class=\"oye_icon oye_icon_cart\"><i class=\"oye_cart_part\"></i><span class=\"oye_inCart\">${list.length}</span></a>")
     };
     ui = $(templates.ui).on("show hide", function(e) {
       return $(this)[e.type]();
@@ -330,6 +330,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
           data.current = i;
         }
       }
+      console.log(data);
       if (data.current) {
         $("#oye_id").val(data.current.CartID);
         return panel.html(templates.panel1.render(data));
@@ -388,10 +389,10 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         } else {
           cartData.list = data;
           if (cartData.status.action === "AddCart") {
-            ui.trigger("恭喜您！商品已加入购物车。");
+            ui.trigger("alert", "恭喜您！商品已加入购物车。点这里可以添加截图哟&darr;");
           }
           if (cartData.status.action === "DelCart") {
-            ui.trigger("商品已删除。");
+            ui.trigger("alert", "商品已删除。");
           }
         }
         cartData.timeMark = (new Date()).toLocaleTimeString();
