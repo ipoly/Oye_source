@@ -174,7 +174,6 @@ $ ->
 
         # 判断当前页是否已在购物车中
         data.current = i for i in data.list when i?.url is location.href
-        console.log data
         if data.current
             $("#oye_id").val(data.current.CartID)
             panel.html(templates.panel1.render(data))
@@ -249,6 +248,7 @@ $ ->
 
     # 截屏回调
     o.screenShotCallback = (data)->
+        console?.log "截图",data
         if data.Error
             ui.trigger("alert",data.msg)
         else
@@ -256,6 +256,9 @@ $ ->
             @cartData.current.pic = data
             ui.trigger("refresh",@cartData)
             ui.trigger("alert","恭喜您！截图已添加。")
+
+    # 提示载入
+    console?.log "脚本已载入"
 
 
 

@@ -57,6 +57,7 @@ body {
 .oye_ui .oye_cart td {
   border-bottom: 1px dashed #efefef;
   padding: 0 5px;
+  white-space: nowrap;
 }
 .oye_ui .oye_cart tbody th {
   width: 1%;

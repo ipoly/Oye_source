@@ -330,7 +330,6 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
           data.current = i;
         }
       }
-      console.log(data);
       if (data.current) {
         $("#oye_id").val(data.current.CartID);
         return panel.html(templates.panel1.render(data));
@@ -402,7 +401,10 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
     setInterval((function() {
       return o.trigger("cartReload");
     }), 1000 * 60 * o.sessionTimeout);
-    return o.screenShotCallback = function(data) {
+    o.screenShotCallback = function(data) {
+      if (typeof console !== "undefined" && console !== null) {
+        console.log("截图", data);
+      }
       if (data.Error) {
         return ui.trigger("alert", data.msg);
       } else {
@@ -412,6 +414,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
         return ui.trigger("alert", "恭喜您！截图已添加。");
       }
     };
+    return typeof console !== "undefined" && console !== null ? console.log("脚本已载入") : void 0;
   });
 
 }).call(this);
