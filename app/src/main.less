@@ -1,3 +1,7 @@
+@blue: #3399FF;
+
+// ==============================
+
 html,body {
     width: 100%;
     height: 100%;
@@ -21,7 +25,7 @@ html,body {
     _position: absolute;
     _top: expression(~'document.documentElement.scrollTop + document.documentElement.offsetHeight - this.offsetHeight  + "px"');
     z-index: 9999999999;
-    a {color:blue;}
+    a {color: @blue;}
     .oye_cart {
         position: absolute;
         right: -1px;
@@ -40,8 +44,8 @@ html,body {
             line-height: 24px;
         }
         img {
-           width: 20px;
-           height: 20px;
+           width: 40px;
+           height: 40px;
            border: 1px solid #ccc;
         }
         input {
@@ -49,12 +53,13 @@ html,body {
         }
         th,td {
             border-bottom: 1px dashed #efefef;
+            padding: 0 5px;
         }
         tbody {
             th {width:1%;}
             td a {
                 display: inline-block;
-                width: 16em;
+                width: 30em;
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -62,6 +67,10 @@ html,body {
         }
         tfoot td {
             text-align: right;
+        }
+        .oye_del {
+            color: @blue;
+            cursor: pointer;
         }
     }
     .oye_panel {

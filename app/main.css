@@ -23,7 +23,7 @@ body {
   z-index: 9999999999;
 }
 .oye_ui a {
-  color: blue;
+  color: #3399ff;
 }
 .oye_ui .oye_cart {
   position: absolute;
@@ -46,8 +46,8 @@ body {
   line-height: 24px;
 }
 .oye_ui .oye_cart img {
-  width: 20px;
-  height: 20px;
+  width: 40px;
+  height: 40px;
   border: 1px solid #ccc;
 }
 .oye_ui .oye_cart input {
@@ -56,19 +56,24 @@ body {
 .oye_ui .oye_cart th,
 .oye_ui .oye_cart td {
   border-bottom: 1px dashed #efefef;
+  padding: 0 5px;
 }
 .oye_ui .oye_cart tbody th {
   width: 1%;
 }
 .oye_ui .oye_cart tbody td a {
   display: inline-block;
-  width: 16em;
+  width: 30em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .oye_ui .oye_cart tfoot td {
   text-align: right;
+}
+.oye_ui .oye_cart .oye_del {
+  color: #3399ff;
+  cursor: pointer;
 }
 .oye_ui .oye_panel {
   text-align: right;

@@ -53,9 +53,9 @@ $ ->
                         <td>${item.siteName}</td>
                         <td>
                             <input name="id" type="hidden" value="${item.CartID}"/>
-                            <input data-id="${item.CartID}" name="number" type="number" value="${item.number}"/>
+                            <input data-id="${item.CartID}" name="number" min="1" type="number" value="${item.number}"/>
                         </td>
-                        <td><span data-id="${item.CartID}">删除</span></td>
+                        <td><span data-id="${item.CartID}" class="oye_del">删除</span></td>
                     </tr>
                 {@/each}
                 </tbody>
@@ -99,7 +99,7 @@ $ ->
     # 获取数据
     .on("click","#oye_add",-> o.trigger("fetchdata"))
     # 删除商品
-    .on("click","span[data-id]",->
+    .on("click",".oye_del",->
         data = {}
         data.CartID = $(@).data("id")
         data.action = "del"
@@ -137,6 +137,7 @@ $ ->
                 ui.trigger("show")
         })
     )
+    # 商品数量控件限制为数字
     .on("keyup","input[type=number]",->
         t = $(@)
         t.val(0) unless Number(t.val())
