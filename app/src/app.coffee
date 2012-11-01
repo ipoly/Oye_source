@@ -20,7 +20,7 @@ $ ->
 
     # 载入对应的抓取脚本
     $.ajaxSetup({scriptCharset:"utf-8"})
-    $.getScript("#{o.dir}/#{location.hostname}.js").done(-> ui.addClass("canFetched") )
+    $.getScript("#{o.dir}/#{location.hostname}.js").done(-> ui.trigger("refresh",o.cartData) )
 
     templates = {
         ui:"""

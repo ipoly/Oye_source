@@ -246,7 +246,7 @@ b=a.children(),b=b.innerWidth()-b.height(99).innerWidth();a.remove();return b});
       scriptCharset: "utf-8"
     });
     $.getScript("" + o.dir + "/" + location.hostname + ".js").done(function() {
-      return ui.addClass("canFetched");
+      return ui.trigger("refresh", o.cartData);
     });
     templates = {
       ui: "<div class=\"oye_ui\">\n    <a id=\"oye_logo\" href=\"http://www.oye.com\"></a>\n    <div id=\"oye_notice\"></div>\n    <form class=\"oye_cart\" action=\"http://www.qq.com\" target=\"_blank\" method=\"get\"></form>\n    <div class=\"oye_panel\"> </div>\n</div>",
